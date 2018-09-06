@@ -1,0 +1,44 @@
+1536045836439	geckodriver	INFO	geckodriver 0.21.0
+1536045836446	geckodriver	INFO	Listening on 127.0.0.1:56145
+error: Found argument '-e' which wasn't expected, or isn't valid in this context
+
+USAGE:
+    geckodriver.exe -v
+
+For more information try --help
+1536046309117	geckodriver	INFO	geckodriver 0.21.0
+1536046309132	geckodriver	INFO	Listening on 127.0.0.1:49748
+1536046312171	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\geckodriver.exe" "-marionette" "-foreground" "-no-remote" "-profile" "C:\\Users\\상윤\\AppData\\Local\\Temp\\rust_mozprofile.bMfx9JKaY4hL"
+error: Found argument '-m' which wasn't expected, or isn't valid in this context
+
+USAGE:
+    geckodriver.exe [FLAGS] [OPTIONS]
+
+For more information try --help
+1536046321032	geckodriver	INFO	geckodriver 0.21.0
+1536046321032	geckodriver	INFO	Listening on 127.0.0.1:49788
+1536046324048	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\geckodriver.exe" "-marionette" "-foreground" "-no-remote" "-profile" "C:\\Users\\상윤\\AppData\\Local\\Temp\\rust_mozprofile.45uN3GYAgxSr"
+error: Found argument '-m' which wasn't expected, or isn't valid in this context
+
+USAGE:
+    geckodriver.exe [FLAGS] [OPTIONS]
+
+For more information try --help
+1536046394589	geckodriver	INFO	geckodriver 0.21.0
+1536046394605	geckodriver	INFO	Listening on 127.0.0.1:49828
+1536046397627	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\geckodriver.exe" "-marionette" "--headless" "-foreground" "-no-remote" "-profile" "C:\\Users\\상윤\\AppData\\Local\\Temp\\rust_mozprofile.UytmZtW3EuJu"
+error: Found argument '-m' which wasn't expected, or isn't valid in this context
+
+USAGE:
+    geckodriver.exe [FLAGS] [OPTIONS]
+
+For more information try --help
+1536046427731	geckodriver	INFO	geckodriver 0.21.0
+1536046427747	geckodriver	INFO	Listening on 127.0.0.1:49883
+1536046430783	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\geckodriver.exe" "-marionette" "--headless" "-foreground" "-no-remote" "-profile" "C:\\Users\\상윤\\AppData\\Local\\Temp\\rust_mozprofile.9U82ADaqWztJ"
+error: Found argument '-m' which wasn't expected, or isn't valid in this context
+
+USAGE:
+    geckodriver.exe [FLAGS] [OPTIONS]
+
+For more information try --help
