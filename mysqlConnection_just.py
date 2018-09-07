@@ -105,7 +105,7 @@ class DatabaseConnection_jeniel:
                           f21, f22, f23, f24, f25, f26, f27, f28, f29, f30,
                           f31, f32, f33, f34, f35, f36, f37, f38, f39, f40,
                           f41, f42, f43, f44, f45, f46, f47, f48, f49, f50,
-                          f51, f52, f53, f54, f55):
+                          f51, f52, f53, f54, f55, f56, f57, f58, f59, f60):
                             #f56 삭제
 
         dbInsertResult = False
@@ -140,7 +140,8 @@ class DatabaseConnection_jeniel:
                              " eduCond, workArea, wageCond, hireType_detl, hireCnt, workPlace, industCommnt," \
                              " nearSubway, wageCond_detl, mealOffer, workTime, jobType, socialEnsure, retirePay, applyDueDate, howToRecruit_detl, howToApply_detl," \
                              " applyDoc, applyDocAttach, bilingual, collgMajor, license, comCap, prfrFactor_detl, wishHireMil, wishHireDisabled," \
-                             " etcPrefer, welfare, facltDisabled, moreHireCond, recruitMngr, recruitMngrTel1, recruitMngrTel2, faxNo, recruitMngrEmail) " \
+                             " etcPrefer, welfare, facltDisabled, moreHireCond, recruitMngr, recruitMngrTel1, recruitMngrTel2, faxNo, recruitMngrEmail, " \
+                             "comScale, corpSuggWage, corpRegDate, corpEvalText, avgYearWage) " \
                              "VALUES ('" + f1 + "','" + f2 + "','" + f3 + "','" + f4 + "','" + f5 + "','" + \
                              f6 + "','" + f7 + "','" + f8 + "','" + f9 + "','" + f10 + "','" + \
                              f11 + "','" + f12 + "','" + f13 + "','" + f14 + "','" + f15 + "','" + \
@@ -151,7 +152,8 @@ class DatabaseConnection_jeniel:
                              f36 + "','" + f37 + "','" + f38 + "','" + f39 + "','" + f40 + "','" + \
                              f41 + "','" + f42 + "','" + f43 + "','" + f44 + "','" + f45 + "','" + \
                              f46 + "','" + f47 + "','" + f48 + "','" + f49 + "','" + f50 + "','" + \
-                             f51 + "','" + f52 + "','" + f53 + "','" + f54 + "','" + f55 + "')"
+                             f51 + "','" + f52 + "','" + f53 + "','" + f54 + "','" + f55 + "','" + \
+                             f56 + "','" + f57 + "','" + f58 + "','" + f59 + "','" + f60 + "')"
 
 
 
