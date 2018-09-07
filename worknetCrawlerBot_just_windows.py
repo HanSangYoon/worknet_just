@@ -7,18 +7,11 @@ import time
 from bs4 import BeautifulSoup as bs
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
 
 from aster_dev_201808.aster879.worknet_just import mysqlConnection_just as mySQL_conn
 
 os.environ['MOS_HEADLESS'] = "1"
-
-
-def getCorpDetailInfo(driver, current_url):
-
-    print('getCorpDetailInfo:', current_url)
-
-
-
 
 
 class worknetCrawlerBot():
@@ -56,6 +49,57 @@ class worknetCrawlerBot():
         self.logger.addHandler(self.fileHandler)
 
         self.start_time_all = time.time()
+
+    def getCorpDetailInfo(self, driver, current_url, articleUniqueNumber, result_workNetDict):
+
+        print('getCorpDetailInfo:', current_url)
+        corpJobDetailArticle = self.autoScroller(driver)
+
+        #기본정보(table)
+        trCntHTML = corpJobDetailArticle.select(
+            'div#content-area > div > div:nth-of-type(2) > table > tbody > tr')
+
+        result_workNetDict['회사명_기업정보' + articleUniqueNumber] = ''
+        result_workNetDict['회사주소_기업정보' + articleUniqueNumber] = ''
+        result_workNetDict['기업형태_기업정보' + articleUniqueNumber] = ''
+        result_workNetDict['자본금_기업정보' + articleUniqueNumber] = ''
+        result_workNetDict['업종_기업정보' + articleUniqueNumber] = ''
+        result_workNetDict['주요제품명_기업정보' + articleUniqueNumber] = ''
+
+
+        for trlength in range(len(trCntHTML)):
+            thCntHTML = corpJobDetailArticle.select(
+                'div#content-area > div > div:nth-of-type(2) > table > tbody > tr:nth-of-type(' + str(
+                    trlength + 1) +') > th')
+
+            if len(thCntHTML) == 1:
+                print('회사명 혹은 회사 주소 부분임')
+                thName = corpJobDetailArticle.select(
+                    'div#content-area > div > div:nth-of-type(2) > table > tbody > tr:nth-of-type(' + str(
+                        trlength + 1) + ') > th')[0].text
+
+                tdName = corpJobDetailArticle.select(
+                    'div#content-area > div > div:nth-of-type(2) > table > tbody > tr:nth-of-type(' + str(
+                        trlength + 1) + ') > td:nth-of-type(1)')[0].text
+
+                print(thName, ':', tdName)
+                result_workNetDict[thName+'_'+articleUniqueNumber] = tdName
+
+                
+            else:
+                print('기업형태, 자본금, 업종, 주요제품명 부분임')
+                for thlength in range(len(thCntHTML)):
+                    thName = corpJobDetailArticle.select(
+                        'div#content-area > div > div:nth-of-type(2) > table > tbody > tr:nth-of-type(' + str(
+                            trlength + 1) + ') > th:nth-of-type(' + str(
+                            thlength + 1) + ')')[0].text
+                    tdName = corpJobDetailArticle.select(
+                        'div#content-area > div > div:nth-of-type(2) > table > tbody > tr:nth-of-type(' + str(
+                            trlength + 1) + ') > td:nth-of-type(' + str(
+                            thlength + 1) + ')')[0].text
+
+                    print(thName, ':', tdName)
+                    result_workNetDict[thName+'_'+articleUniqueNumber] = tdName
 
 
     def getAllGongoInfo(self, corpJobDetailArticle, result_workNetDictionaty, articleUniqueNum):
@@ -138,8 +182,7 @@ class worknetCrawlerBot():
             result_workNetDictionaty['corpImgDir_' + articleUniqueNum] = corpImgDir
 
         # 회사 소개 상세 정보(회사명, 대표자명, 근로자수, 자본금, 연매출액, 업종, 주요사업내용, 회사주소, 홈페이지)
-        detailCorpInfo_length = len(corpJobDetailArticle2.select(
-            'div#content-area > div > div:nth-of-type(4) > div:nth-of-type(2) > table > tbody > tr'))
+        detailCorpInfo_length = len(corpJobDetailArticle2.select('div#content-area > div > div:nth-of-type(4) > div:nth-of-type(2) > table > tbody > tr'))
 
         print('회사 소개 정보 길이:', detailCorpInfo_length)
 
@@ -217,11 +260,84 @@ class worknetCrawlerBot():
             print('204_line_result_workNetDictionaty :', result_workNetDictionaty)
 
         else:
+            print('HTML 구조가 변경됨')
             # print('detailCorpInfo_length가 7이 아닙니다.')
             if detailCorpInfo_length == 0:
+                # 회사 소개 항목을 모두 채운 상태임.
+                # detailCorpInfo_length 자체가 len()의 결과물이기 때문에 다시 len()으로 감싸놓을 필요 없음.
+
+                for tr_length in range(detailCorpInfo_length):
+                    trUnderThLen = len(corpJobDetailArticle2.select(
+                        'div#content-area > div > div:nth-of-type(5) > div:nth-of-type(2) > table > tbody > tr:nth-of-type(' + str(
+                            tr_length + 1) + ') > th'))
+
+                    for thORtd_length in range(trUnderThLen):
+                        # Maria-Filed :
+                        # 회사명: corpNm_detl/대표자명: ceoNm/근로자수: workerCnt/ 자본금: jabon/
+                        # 연매출액: yearIncome/업종: jobKind/주요사업내용: jobKind_main/회사주소:corpAddr
+                        # 홈페이지: homepage
+                        detailPartTitle = corpJobDetailArticle2.select(
+                            'div#content-area > div > div:nth-of-type(5) > div:nth-of-type(2) > table > tbody > tr:nth-of-type(' + str(
+                                tr_length + 1) + ') > th:nth-of-type(' + str(
+                                thORtd_length + 1) + ')')[0].text.replace(
+                            " ", "").replace(
+                            "  ", " ").replace(
+                            "	", " ").replace(
+                            "    ", " ").replace(
+                            "    ", " ").replace(
+                            "     ", " ").replace(
+                            "      ", " ").replace(
+                            "       ", " ").replace(
+                            "        ", " ").replace(
+                            "          ", " ").replace(
+                            "\n", " ").replace(
+                            "\xa0", "").replace(
+                            "\t", "").replace(
+                            ",", "&")
+
+                        print('detailPartTitle:', detailPartTitle)
+
+                        detailPartContent = corpJobDetailArticle2.select(
+                            'div#content-area > div > div:nth-of-type(5) > div:nth-of-type(2) > table > tbody > tr:nth-of-type(' + str(
+                                tr_length + 1) + ') > td:nth-of-type(' + str(
+                                thORtd_length + 1) + ')')[0].text.replace(
+                            # " ", " ").replace(
+                            "  ", " ").replace(
+                            "	", " ").replace(
+                            "    ", " ").replace(
+                            "    ", " ").replace(
+                            "     ", " ").replace(
+                            "      ", " ").replace(
+                            "       ", " ").replace(
+                            "        ", " ").replace(
+                            "          ", " ").replace(
+                            "\n", " ").replace(
+                            "\xa0", "").replace(
+                            "\t", "").replace(
+                            ",", "&")
+
+                        # DATA : corpNm_detail ~ homepage
+
+                        corpinfolist01.append(detailPartTitle)
+                        corpinfolist01contents.append(detailPartContent)
+
+                print('corpinfolist01:', corpinfolist01)
+                for listleng in range(len(corpinfolist01)):
+                    print('corpinfolist01', corpinfolist01[listleng] + '_' + articleUniqueNum)
+                    result_workNetDictionaty[corpinfolist01[listleng] + '_' + articleUniqueNum] = ''
+                    print(corpinfolist01[listleng] + '_' + articleUniqueNum, '=',
+                          corpinfolist01contents[listleng])
+
+                    result_workNetDictionaty[corpinfolist01[listleng] + '_' + articleUniqueNum] = detailPartContent
+                self.logger.debug('{}-{}.{}:{}'.format(tr_length, thORtd_length, detailPartTitle, detailPartContent))
+                print('204_line_result_workNetDictionaty :', result_workNetDictionaty)
+
+            else:
                 self.logger.debug('회사 소개가 없습니다.')
                 print('회사 소개가 없음')
 
+                self.logger.debug('회사 소개 tr 갯수 : {}'.format(detailCorpInfo_length))
+                print('회사 소개 tr테그 개수: ', detailCorpInfo_length)
 
                 #변수 생성
                 #회사명, 대표자명, 근로자수, 자본금, 연매출액, 업종, 주요사업내용, 회사주소, 홈페이지
@@ -234,10 +350,6 @@ class worknetCrawlerBot():
                 result_workNetDictionaty['주요사업내용_' + articleUniqueNum] = ''
                 result_workNetDictionaty['회사주소_' + articleUniqueNum] = ''
                 result_workNetDictionaty['홈페이지_' + articleUniqueNum] = ''
-
-            else:
-                self.logger.debug('회사 소개 tr 갯수 : {}'.format(detailCorpInfo_length))
-                print('회사 소개 tr테그 개수: ', detailCorpInfo_length)
 
         # Maria-Field :
         # 회사 공고 지원자 숙지 사항(지원자격, 근무조건, 고용형태)
@@ -1009,7 +1121,7 @@ class worknetCrawlerBot():
         print('전체 페이지 수 : ', totalCount_page)
 
         # 연결될 각 페이지의 URL
-        dept_page_url = [page_url.format(i) for i in range(1, 2)]  # 페이지 수를 제한할 수 있음. 테스트를 위해 10페이지로 제한.
+        dept_page_url = [page_url.format(i) for i in range(1, 3)]  # 페이지 수를 제한할 수 있음. 테스트를 위해 10페이지로 제한.
         #dept_page_url = [page_url.format(i) for i in range(1, totalCount_page)]
 
         # 기존 구인인증 번호 값 추출
@@ -1039,18 +1151,48 @@ class worknetCrawlerBot():
 
                     # 마감된 채용정보 alert 발생 시 error 발생하는 try 문
                     try:
-                        corpJobText = result_autoScroller.select(
-                            "#list" + str(list_length + 1) + " > td:nth-of-type(3) > dl > dt > a")[0].text
-                        # logger.debug('담당업무 제목 : {}'.format(corpJobText.replace("  ","").replace(" ", "").replace("    ", "").replace("        ", "").replace("\n", "").replace("\xa0", "") ) )
+                        #201809추가
+                        try:
+                            #corpJobAltText = result_autoScroller.select("#list" + str(list_length + 1) + " > td:nth-of-type(2) > div:nth-of-type(1) > img").__getattribute__(self, 'alt')
+                            #items = driver.find_element_by_tag_name('img')
+
+                            corpInfoFirst = driver.find_element_by_xpath('//*[@id="list' + str(list_length + 1) + '"]/td[1]/input').get_attribute('value')
+                            print('corpInfoFirst:', corpInfoFirst)
+
+                            #K172121809070016|VALIDATION|(주)아산섬유|자동차 내장재 원단 생산직원 모집
+
+                            recruitUniqueNumber = corpInfoFirst.split("|")[0]
+
+                            corpNameFirst = driver.find_element_by_xpath('//*[@id="list' + str(list_length + 1) + '"]/td[2]/a').text
+                            print('corpNameFirst:', corpNameFirst)
+
+                            for corpTpelength in range(3):
+                                try:
+                                    print(driver.find_element_by_xpath('//*[@id="list' + str(list_length + 1) + '"]/td[2]/div[1]/img[' + str(corpTpelength + 1) + ']').get_attribute('alt'))
+                                    corpType = driver.find_element_by_xpath('//*[@id="list' + str(list_length + 1) + '"]/td[2]/div[1]/img[' + str(corpTpelength + 1) + ']').get_attribute('alt')
+
+                                    result_workNetDictionaty['기업종별_' + recruitUniqueNumber] = corpType
+
+                                except Exception as e:
+                                    print('기업종별 구분값(벤처/가족/강소/대기업 등)이 존재하지 않음')
+
+                        except Exception as e:
+                            print('벤처/강소/가족 등의 표시 없음', e)
+                        
+                        
+                        corpJobText = result_autoScroller.select("#list" + str(list_length + 1) + " > td:nth-of-type(3) > dl > dt > a")[0].text
 
                         # beautifulsoup의 find 함수를 사용-> attr의  return 값을 dictionary 형태로 함.
                         corpJobText_URL = result_autoScroller.find("a", string=corpJobText)
                         # logger.debug('제목_URL : {}'.format(corpJobText_URL['href']) )
 
                         # 하단의 공고 세부항목으로 진입 후 출력되는 공고 제목과 비교하기 위함.
-                        corpJboArticleTitle = corpJobText.replace("    ", "").replace(" ", "").replace("    ",
-                                                                                                       "").replace(
-                            "        ", "").replace("\n", "").replace("\xa0", "")
+                        corpJboArticleTitle = corpJobText.replace(
+                            " ", "").replace(
+                            "    ", "").replace(
+                            "        ", "").replace(
+                            "\n", "").replace(
+                            "\xa0", "")
 
                         # 각 구인 공고별 URL 취득
                         corpJobText_detail_URL = corpJobText_URL['href']
@@ -1098,13 +1240,13 @@ class worknetCrawlerBot():
 
                                 # Maria-Field : 공고 제목 : corpRecruitArticleTitle
                                 # Maria-Data : corpRecruitArticleTitle
-                                corpRecruitArticleTitle = \
-                                corpJobDetailArticle.select('div#content-area > div > div:nth-of-type(3) > h3')[
-                                    0].text.replace("    ", "").replace(" ", "").replace("    ", "").replace("        ",
-                                                                                                             "").replace(
-                                    "\n", "").replace("\xa0", "").split("이메일입사지원")[0]
-
-                                #print('11. ', corpRecruitArticleTitle)
+                                corpRecruitArticleTitle = corpJobDetailArticle.select('div#content-area > div > div:nth-of-type(3) > h3')[
+                                    0].text.replace(
+                                    " ", " ").replace(
+                                    "    ", " ").replace(
+                                    "        ", " ").replace(
+                                    "\n", "").replace(
+                                    "\xa0", "").split("이메일입사지원")[0]
 
                                 result_workNetDictionaty['공고제목_' + articleUniqueNum] = corpRecruitArticleTitle
 
@@ -1114,24 +1256,32 @@ class worknetCrawlerBot():
                                 if returnGongo == True:
                                     print('채용정보를 성공적으로 취득하였음.')
                                     #채용정보에서 기업정보로 넘어감.
-                                    link = self.driver.find_element_by_xpath('//*[@id="content-area"]/div/ul/li[2]/a')
-                                    link.click()
+                                    try:
+                                        link = self.driver.find_element_by_xpath('//*[@id="content-area"]/div/ul/li[2]/a')
+                                        link.click()
 
-                                    print(self.driver.current_url)
+                                        print(self.driver.current_url)
 
-                                    getCorpDetailInfo(driver, self.driver.current_url)
+                                        self.getCorpDetailInfo(driver, self.driver.current_url, articleUniqueNum, result_workNetDictionaty)
 
+                                    except Exception as e:
+                                        print('기업 정보 탭이 존재하지 않습니다.', e)
 
 
 
                                 else:
                                     print('채용정보를 정상적으로 취득하지 못함.')
                                     #기업 정보로 넘어감
-                                    link = self.driver.find_element_by_xpath('//*[@id="content-area"]/div/ul/li[2]/a')
-                                    link.click()
+                                    try:
+                                        link = self.driver.find_element_by_xpath('//*[@id="content-area"]/div/ul/li[2]/a')
+                                        link.click()
 
-                                    print(self.driver.current_url)
+                                        print(self.driver.current_url)
 
+                                        self.getCorpDetailInfo(driver, self.driver.current_url, articleUniqueNum, result_workNetDictionaty)
+
+                                    except Exception as e:
+                                        print('기업 정보 탭이 존재하지 않습니다.', e)
 
 
                             else:
