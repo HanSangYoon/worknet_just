@@ -195,11 +195,11 @@ class worknetCrawlerBot():
             result_workNetDictionaty['corpImgDir_' + articleUniqueNum] = corpImgDir
 
         # 회사 소개 상세 정보(회사명, 대표자명, 근로자수, 자본금, 연매출액, 업종, 주요사업내용, 회사주소, 홈페이지)
-        detailCorpInfo_length = len(corpJobDetailArticle2.select('div#content-area > div > div:nth-of-type(4) > div:nth-of-type(2) > table > tbody > tr'))
+        detailCorpInfo_length = len(corpJobDetailArticle2.select('div#content-area > div > div.coinfo > div:nth-of-type(2) > table > tbody > tr'))
 
         print('회사 소개 정보 길이:', detailCorpInfo_length)
 
-        result_workNetDictionaty['기업평가글_' + articleUniqueNum] = ''
+        #result_workNetDictionaty['기업평가글_' + articleUniqueNum] = ''
 
         # 회사 소개 항목을 덜 채운 상태임.
         if detailCorpInfo_length != 0:
@@ -209,11 +209,10 @@ class worknetCrawlerBot():
 
             for tr_length in range(detailCorpInfo_length):
                 trUnderThLen = len(corpJobDetailArticle2.select(
-                    'div#content-area > div > div:nth-of-type(4) > div:nth-of-type(2) > table > tbody > tr:nth-of-type(' + str(
+                    'div#content-area > div > div.coinfo > div:nth-of-type(2) > table > tbody > tr:nth-of-type(' + str(
                         tr_length + 1) + ') > th'))
 
                 detailPartContent = ''
-                detailPartContent2 = ''
 
                 for thORtd_length in range(trUnderThLen):
                     # Maria-Filed :
@@ -221,7 +220,7 @@ class worknetCrawlerBot():
                     # 연매출액: yearIncome/업종: jobKind/주요사업내용: jobKind_main/회사주소:corpAddr
                     # 홈페이지: homepage
                     detailPartTitle = corpJobDetailArticle2.select(
-                        'div#content-area > div > div:nth-of-type(4) > div:nth-of-type(2) > table > tbody > tr:nth-of-type(' + str(
+                        'div#content-area > div > div.coinfo > div:nth-of-type(2) > table > tbody > tr:nth-of-type(' + str(
                             tr_length + 1) + ') > th:nth-of-type(' + str(
                             thORtd_length + 1) + ')')[0].text.replace(
                                 " ", "").replace(
@@ -242,7 +241,7 @@ class worknetCrawlerBot():
                     print('detailPartTitle:', detailPartTitle)
 
                     detailPartContent = corpJobDetailArticle2.select(
-                        'div#content-area > div > div:nth-of-type(4) > div:nth-of-type(2) > table > tbody > tr:nth-of-type(' + str(
+                        'div#content-area > div > div.coinfo > div:nth-of-type(2) > table > tbody > tr:nth-of-type(' + str(
                             tr_length + 1) + ') > td:nth-of-type(' + str(
                             thORtd_length + 1) + ')')[0].text.replace(
                                 #" ", " ").replace(
@@ -270,37 +269,50 @@ class worknetCrawlerBot():
                     try:
                         print('기업소개상단테이블의 회사명 하단에 추가 기업 설명부분 추출 존재')
                         detailTextExpLen = len(corpJobDetailArticle2.select(
-                            'div#content-area > div > div:nth-of-type(4) > div:nth-of-type(2) > table > tbody > tr:nth-of-type(' + str(
-                                tr_length + 1) + ') > td:nth-of-type(' + str(
-                                thORtd_length + 1) + ') > dl > dd > ul > li'))
+                            'div#content-area > div > div.coinfo > div:nth-of-type(2) > table > tbody > tr:nth-of-type(' + str(
+                                tr_length + 1) + ') > td > dl > dd > ul > li'))
 
-                        for jenRealbad in range(detailTextExpLen):
-                            print('!@#!@#1111')
-                            detailPartContent2 = corpJobDetailArticle2.select(
-                                'div#content-area > div > div:nth-of-type(4) > div:nth-of-type(2) > table > tbody > tr:nth-of-type(' + str(
-                                    tr_length + 1) + ') > td:nth-of-type(' + str(
-                                    thORtd_length + 1) + ') > dl > dd > ul > li:nth-of-type(' + str(jenRealbad + 1) + ') > span > a')[0].text.replace(
-                                        "  ", " ").replace(
-                                        "	", " ").replace(
-                                        "    ", " ").replace(
-                                        "    ", " ").replace(
-                                        "     ", " ").replace(
-                                        "      ", " ").replace(
-                                        "       ", " ").replace(
-                                        "        ", " ").replace(
-                                        "          ", " ").replace(
-                                        "\n", " ").replace(
-                                        "\xa0", "").replace(
-                                        "\t", "").replace(
-                                        "0,0", "").replace(
-                                        ", ", "")
+                        print("detailTextExpLen: ", detailTextExpLen)
 
-                            corpinfolist01contents2.append(detailPartContent2)
+                        if detailTextExpLen != 0:
+                            for jenRealbad in range(detailTextExpLen):
+                                print('!@#!@#1111')
 
-                            print('!@#!@#2222')
-                            result_workNetDictionaty['기업평가글_' + articleUniqueNum] = str(corpinfolist01contents2).replace(",", "+")
+                                try:
 
-                            print('기업 평가글 :', result_workNetDictionaty['기업평가글_' + articleUniqueNum])
+
+                                    detailPartContent2 = corpJobDetailArticle2.select(
+                                        'div#content-area > div > div.coinfo > div:nth-of-type(2) > table > tbody > tr:nth-of-type(' + str(
+                                            tr_length + 1) + ') > td:nth-of-type(' + str(
+                                        thORtd_length + 1) + ') > dl > dd > ul > li:nth-of-type(' + str(jenRealbad + 1) + ') > span > a')[0].text.replace(
+                                                "  ", " ").replace(
+                                                "	", " ").replace(
+                                                "    ", " ").replace(
+                                                "    ", " ").replace(
+                                                "     ", " ").replace(
+                                                "      ", " ").replace(
+                                                "       ", " ").replace(
+                                                "        ", " ").replace(
+                                                "          ", " ").replace(
+                                                "\n", " ").replace(
+                                                "\xa0", "").replace(
+                                                "\t", "").replace(
+                                                ", ", "")
+
+                                    corpinfolist01contents2.append(detailPartContent2)
+
+                                    print('!@#!@#2222')
+                                    result_workNetDictionaty['기업평가글_' + articleUniqueNum] = str(
+                                        corpinfolist01contents2).replace(",", "+").replace("['", "").replace("']", "")
+
+                                except Exception as e:
+                                    print('문구 추출과정에서 문제가 발생함.', e)
+                                    result_workNetDictionaty['기업평가글_' + articleUniqueNum] = '기업 평가글이 존재하지 않음.'
+
+                                print('기업 평가글 :', result_workNetDictionaty['기업평가글_' + articleUniqueNum])
+                        else:
+                            print('기업 평가 문구가 존재하지 않습니다.')
+                            result_workNetDictionaty['기업평가글_' + articleUniqueNum] = ''
                             
                     except Exception as e:
                         print('기업소개상단테이블의 회사명 하단에 추가 기업 설명부분 존재하지 않음.')
@@ -400,23 +412,50 @@ class worknetCrawlerBot():
                 self.logger.debug('회사 소개 tr 갯수 : {}'.format(detailCorpInfo_length))
                 print('회사 소개 tr테그 개수: ', detailCorpInfo_length)
 
-                #변수 생성
-                #회사명, 대표자명, 근로자수, 자본금, 연매출액, 업종, 주요사업내용, 회사주소, 홈페이지
-                # result_workNetDictionaty['회사명_' + articleUniqueNum] = ''
-                # result_workNetDictionaty['대표자명_' + articleUniqueNum] = ''
-                # result_workNetDictionaty['근로자수_' + articleUniqueNum] = ''
-                # result_workNetDictionaty['자본금_' + articleUniqueNum] = ''
-                # result_workNetDictionaty['연매출액_' + articleUniqueNum] = ''
-                # result_workNetDictionaty['업종_' + articleUniqueNum] = ''
-                # result_workNetDictionaty['주요사업내용_' + articleUniqueNum] = ''
-                # result_workNetDictionaty['회사주소_' + articleUniqueNum] = ''
-                # result_workNetDictionaty['홈페이지_' + articleUniqueNum] = ''
 
         # Maria-Field :
         # 회사 공고 지원자 숙지 사항(지원자격, 근무조건, 고용형태)
         alertApplicant_len = len(corpJobDetailArticle2.select(
             'div#content-area > div > div:nth-of-type(4) > div#intereView > div:nth-of-type(1) > ul > li'))
         # print('@', alertApplicant_len)
+
+        # 초기화
+        result_workNetDictionaty['모집직종_' + articleUniqueNum] = ''
+        result_workNetDictionaty['직종키워드_' + articleUniqueNum] = ''
+        result_workNetDictionaty['관련직종_' + articleUniqueNum] = ''
+        result_workNetDictionaty['직무내용_' + articleUniqueNum] = ''
+        result_workNetDictionaty['경력조건_' + articleUniqueNum] = ''
+        result_workNetDictionaty['학력_' + articleUniqueNum] = ''
+        result_workNetDictionaty['근무지역_' + articleUniqueNum] = ''
+        result_workNetDictionaty['임금_' + articleUniqueNum] = ''
+        result_workNetDictionaty['고용형태_' + articleUniqueNum] = ''
+        result_workNetDictionaty['모집인원_' + articleUniqueNum] = ''
+        result_workNetDictionaty['근무예정지_' + articleUniqueNum] = ''
+        result_workNetDictionaty['소속산업단지_' + articleUniqueNum] = ''
+        result_workNetDictionaty['인근전철역_' + articleUniqueNum] = ''
+        result_workNetDictionaty['임금조건_' + articleUniqueNum] = ''
+        result_workNetDictionaty['식사(비)제공_' + articleUniqueNum] = ''
+        result_workNetDictionaty['근무시간_' + articleUniqueNum] = ''
+        result_workNetDictionaty['근무형태_' + articleUniqueNum] = ''
+        result_workNetDictionaty['사회보험_' + articleUniqueNum] = ''
+        result_workNetDictionaty['퇴직금지급방법_' + articleUniqueNum] = ''
+        result_workNetDictionaty['접수마감일_' + articleUniqueNum] = ''
+        result_workNetDictionaty['전형방법_' + articleUniqueNum] = ''
+        result_workNetDictionaty['접수방법_' + articleUniqueNum] = ''
+        result_workNetDictionaty['제출서류준비물_' + articleUniqueNum] = ''
+        result_workNetDictionaty['제출서류양식첨부_' + articleUniqueNum] = ''
+        result_workNetDictionaty['외국어능력_' + articleUniqueNum] = ''
+        result_workNetDictionaty['전공_' + articleUniqueNum] = ''
+        result_workNetDictionaty['자격면허_' + articleUniqueNum] = ''
+        result_workNetDictionaty['컴퓨터활용능력_' + articleUniqueNum] = ''
+        result_workNetDictionaty['우대조건_' + articleUniqueNum] = ''
+        result_workNetDictionaty['병역특례채용희망_' + articleUniqueNum] = ''
+        result_workNetDictionaty['장애인채용희망_' + articleUniqueNum] = ''
+        result_workNetDictionaty['기타우대사항_' + articleUniqueNum] = ''
+        result_workNetDictionaty['복리후생_' + articleUniqueNum] = ''
+        result_workNetDictionaty['장애인편의시설_' + articleUniqueNum] = ''
+        result_workNetDictionaty['더추가할구인조건_' + articleUniqueNum] = ''
+
         for alert_length in range(alertApplicant_len):
             alertNoticeTitle = corpJobDetailArticle2.select(
                 'div#content-area > div > div:nth-of-type(4) > div#intereView > div:nth-of-type(1) > ul > li:nth-of-type(' + str(
@@ -442,6 +481,7 @@ class worknetCrawlerBot():
             alertNoticecontent_len = len(corpJobDetailArticle2.select(
                 'div#content-area > div > div:nth-of-type(4) > div#intereView > div:nth-of-type(1) > ul > li:nth-of-type(' + str(
                     alert_length + 1) + ') > dl > dt'))
+
 
             if alertNoticecontent_len != 0:
                 for alterNotice_length in range(alertNoticecontent_len):
@@ -488,14 +528,8 @@ class worknetCrawlerBot():
                     result_workNetDictionaty[articleNoticeDetailTitle + '_' + articleUniqueNum] = articleNoticeDetailContent
                     print(articleNoticeDetailTitle, ":", articleNoticeDetailContent)
 
-                else:
-                    print('기초 정보 즉, 지원자격, 근무조건, 고용형태 에 대한 정보가 등록되어 있지 않습니다.')
-                    result_workNetDictionaty['경력_' + articleUniqueNum] = ''
-                    result_workNetDictionaty['학력_' + articleUniqueNum] = ''
-                    result_workNetDictionaty['근무지역_' + articleUniqueNum] = ''
-                    result_workNetDictionaty['임금_' + articleUniqueNum] = ''
-                    result_workNetDictionaty['고용형태_' + articleUniqueNum] = ''
-                    result_workNetDictionaty['근무형태_' + articleUniqueNum] = ''
+            else:
+                print('기초 정보 즉, 지원자격, 근무조건, 고용형태 에 대한 정보가 등록되어 있지 않습니다.')
 
 
         # 복리후생
@@ -525,6 +559,8 @@ class worknetCrawlerBot():
         print('모집 요강 구인 인증 번호: ', mojibYoGangSerialNo)
         self.logger.debug('$$: {}'.format(lengthOfTable))
         #print('$$', lengthOfTable)
+
+
 
         for infoTable_length in range(lengthOfTable):
             print()
@@ -774,7 +810,7 @@ class worknetCrawlerBot():
                             "       ", " ").replace(
                             "        ", " ").replace(
                             "          ", " ").replace(
-                            "\n", " ").replace(
+                            #"\n", " ").replace(
                             "\xa0", "").replace(
                             "\t", "").replace(
                             ",", "&")
@@ -795,8 +831,8 @@ class worknetCrawlerBot():
                             "          ", " ").replace(
                             "\n", " ").replace(
                             "\xa0", "").replace(
-                            "\t", "").replace(
-                            ",", "&")
+                            "\t", "")\
+                            #.replace(",", "&")
 
 
                         result_workNetDictionaty[
@@ -825,8 +861,8 @@ class worknetCrawlerBot():
                             "          ", " ").replace(
                             "\n", " ").replace(
                             "\xa0", "").replace(
-                            "\t", "").replace(
-                            ",", "&")
+                            "\t", "")
+                            #.replace(",", "\,")
 
 
                         result_workNetDictionaty[
@@ -987,13 +1023,13 @@ class worknetCrawlerBot():
                          '{},{},{},{},{},{},{},{},{},{},'
                          '{},{},{},{}'.format(
                 result_workNetDictionaty['구인인증번호_' + articleUniqueNum],  # articleUniqueNum
-                result_workNetDictionaty['회사명_' + articleUniqueNum],  # corpNm
+                result_workNetDictionaty['회사이름_' + articleUniqueNum],  # corpNm
                 result_workNetDictionaty['공고제목_' + articleUniqueNum],  # corpWantJob
                 #result_workNetDictionaty['공고제목상세_' + articleUniqueNum],  # corpRecruitArticleTitle
                 result_workNetDictionaty['조회수_' + articleUniqueNum],  # searchArticleCnt
                 result_workNetDictionaty['지원자_' + articleUniqueNum],  # applicantArticleCnt
                 result_workNetDictionaty['corpImgDir_' + articleUniqueNum],  # corpImgDir
-                result_workNetDictionaty['회사명_' + articleUniqueNum],  # corpNm_detl
+                result_workNetDictionaty['회사명_' + articleUniqueNum].split(result_workNetDictionaty['회사이름_' + articleUniqueNum])[1],  # corpNm_detl
                 result_workNetDictionaty['대표자명_' + articleUniqueNum],  # ceoNm
                 result_workNetDictionaty['근로자수_' + articleUniqueNum],  # workerCnt
                 result_workNetDictionaty['자본금_' + articleUniqueNum],  # jabon
@@ -1002,7 +1038,7 @@ class worknetCrawlerBot():
                 result_workNetDictionaty['주요사업내용_' + articleUniqueNum],  # jobKind_main
                 result_workNetDictionaty['회사주소_' + articleUniqueNum],  # corpAddr
                 result_workNetDictionaty['홈페이지_' + articleUniqueNum],  # homepage
-                result_workNetDictionaty['모집직종_' + articleUniqueNum],  # recruitJobKind
+                result_workNetDictionaty['모집직종_' + articleUniqueNum].replace("직업정보","").replace("훈련정보","").replace("자격정보",""),  # recruitJobKind
                 result_workNetDictionaty['직종키워드_' + articleUniqueNum],  # jobKindKeyword
                 result_workNetDictionaty['관련직종_' + articleUniqueNum],  # relatedJobKind
                 result_workNetDictionaty['직무내용_' + articleUniqueNum],  # whatWork
@@ -1011,7 +1047,7 @@ class worknetCrawlerBot():
                 result_workNetDictionaty['근무지역_' + articleUniqueNum],  # workArea
                 result_workNetDictionaty['임금_' + articleUniqueNum],  # wageCond
                 result_workNetDictionaty['고용형태_' + articleUniqueNum],  # hireType_detl
-                result_workNetDictionaty['모집인원_' + articleUniqueNum],  # hireCnt
+                result_workNetDictionaty['모집인원_' + articleUniqueNum].split("    (")[0],  # hireCnt
                 result_workNetDictionaty['근무예정지_' + articleUniqueNum],  # workPlace
                 result_workNetDictionaty['소속산업단지_' + articleUniqueNum],  # industCommnt
                 result_workNetDictionaty['인근전철역_' + articleUniqueNum],
@@ -1066,13 +1102,13 @@ class worknetCrawlerBot():
         try:
             insertResult = database_connection.insert_new_record(
                 result_workNetDictionaty['구인인증번호_' + articleUniqueNum].replace("\t", ""),  # articleUniqueNum
-                result_workNetDictionaty['회사명_' + articleUniqueNum].replace("\t", ""),  # corpNm
+                result_workNetDictionaty['회사이름_' + articleUniqueNum].replace("\t", ""),  # corpNm
                 result_workNetDictionaty['공고제목_' + articleUniqueNum].replace("\t", ""),  # corpWantJob
                 #result_workNetDictionaty['공고제목상세_' + articleUniqueNum].replace("\t", ""), # corpRecruitArticleTitle
                 result_workNetDictionaty['조회수_' + articleUniqueNum].replace("\t", ""),  # searchArticleCnt
                 result_workNetDictionaty['지원자_' + articleUniqueNum].replace("\t", ""),  # applicantArticleCnt
                 result_workNetDictionaty['corpImgDir_' + articleUniqueNum].replace("\t", ""),  # corpImgDir
-                result_workNetDictionaty['회사명_' + articleUniqueNum].replace("\t", ""),  # corpNm_detl
+                result_workNetDictionaty['회사명_' + articleUniqueNum].split(result_workNetDictionaty['회사이름_' + articleUniqueNum])[1].replace("\t", ""),  # corpNm_detl
                 result_workNetDictionaty['대표자명_' + articleUniqueNum].replace("\t", ""),  # ceoNm
                 result_workNetDictionaty['근로자수_' + articleUniqueNum].replace("\t", ""),  # workerCnt
                 result_workNetDictionaty['자본금_' + articleUniqueNum].replace("\t", ""),  # jabon
@@ -1081,7 +1117,7 @@ class worknetCrawlerBot():
                 result_workNetDictionaty['주요사업내용_' + articleUniqueNum].replace("\t", ""),  # jobKind_main
                 result_workNetDictionaty['회사주소_' + articleUniqueNum].replace("\t", ""),  # corpAddr
                 result_workNetDictionaty['홈페이지_' + articleUniqueNum].replace("\t", ""),  # homepage
-                result_workNetDictionaty['모집직종_' + articleUniqueNum].replace("\t", ""),  # recruitJobKind
+                result_workNetDictionaty['모집직종_' + articleUniqueNum].replace("\t", "").replace("직업정보","").replace("훈련정보","").replace("자격정보",""),  # recruitJobKind
                 result_workNetDictionaty['직종키워드_' + articleUniqueNum].replace("\t", ""),  # jobKindKeyword
                 result_workNetDictionaty['관련직종_' + articleUniqueNum].replace("\t", ""),  # relatedJobKind
                 result_workNetDictionaty['직무내용_' + articleUniqueNum].replace("\t", ""),  # whatWork
@@ -1090,7 +1126,7 @@ class worknetCrawlerBot():
                 result_workNetDictionaty['근무지역_' + articleUniqueNum].replace("\t", ""),  # workArea
                 result_workNetDictionaty['임금_' + articleUniqueNum].replace("\t", ""),  # wageCond
                 result_workNetDictionaty['고용형태_' + articleUniqueNum].replace("\t", ""),  # hireType_detl
-                result_workNetDictionaty['모집인원_' + articleUniqueNum].replace("\t", ""),  # hireCnt
+                result_workNetDictionaty['모집인원_' + articleUniqueNum].replace("\t", "").split("(취업알선기관")[0],  # hireCnt
                 result_workNetDictionaty['근무예정지_' + articleUniqueNum].replace("\t", ""),  # workPlace
                 result_workNetDictionaty['소속산업단지_' + articleUniqueNum].replace("\t", ""),  # industCommnt
                 result_workNetDictionaty['인근전철역_' + articleUniqueNum].replace("\t", ""),  # nearSubway
@@ -1102,7 +1138,7 @@ class worknetCrawlerBot():
                 result_workNetDictionaty['퇴직금지급방법_' + articleUniqueNum].replace("\t", ""),  # retirePay
                 result_workNetDictionaty['접수마감일_' + articleUniqueNum].replace("\t", ""),  # applyDueDate
                 result_workNetDictionaty['전형방법_' + articleUniqueNum].replace("\t", ""),  # howToRecruit_detl
-                result_workNetDictionaty['접수방법_' + articleUniqueNum].replace("\t", ""),  # howToApply_detl
+                result_workNetDictionaty['접수방법_' + articleUniqueNum].replace("\t", "").replace("이메일 입사지원", ""),  # howToApply_detl
                 result_workNetDictionaty['제출서류준비물_' + articleUniqueNum].replace("\t", ""),  # applyDoc
                 result_workNetDictionaty['제출서류양식첨부_' + articleUniqueNum].replace("\t", ""),  # applyDocAttach
                 result_workNetDictionaty['외국어능력_' + articleUniqueNum].replace("\t", ""),  # bilingual
@@ -1136,7 +1172,7 @@ class worknetCrawlerBot():
             self.logger.debug('DB insert result : {}'.format(insertResult))
 
             doneOrNot = True
-        except Exception as e:
+        except BaseException as e:
             print('데이터 입력 오류: ', e)
             doneOrNot = False
 
@@ -1223,7 +1259,6 @@ class worknetCrawlerBot():
 
 
         for page_length in range(len(dept_page_url)):
-
             insertCnt = 1
             try:
                 driver.get(dept_page_url[i])
@@ -1234,62 +1269,64 @@ class worknetCrawlerBot():
 
                 # 각 공고별 정보 검색 및 취득
                 for list_length in range(len(result_autoScroller.select("#searchCondExtVO > table > tbody > tr"))):
+
+                    articleOverViewInfo = result_autoScroller.find(id='chkboxWantedAuthNo' + str(list_length))['value']
+                    self.logger.debug('구인인증번호|회사명|공고내용: {}'.format(articleOverViewInfo))
+
                     print('각 공고별 검색 start')
                     self.logger.debug('개별 공고 정보 검색 시작')
-                    # 기업 명 체크박스 선별
-                    # pageSourceText = result_autoScroller.find_all('input', {'id': 'chkboxWantedAuthNo' + list_indies.split(',')[list_length]} )
 
                     corpType = ''
                     corpFareFirst = ''
                     corpRegisterFirst = ''
 
-                    # 마감된 채용정보 alert 발생 시 error 발생하는 try 문
                     try:
                         #201809추가
-                        recruitUniqueNumber = '0000'
-                        try:
-                            #corpJobAltText = result_autoScroller.select("#list" + str(list_length + 1) + " > td:nth-of-type(2) > div:nth-of-type(1) > img").__getattribute__(self, 'alt')
-                            #items = driver.find_element_by_tag_name('img')
+                        tdLength = len(result_autoScroller.select('tr#list' + str(list_length + 1) + ' > td'))
+                        print('tdLength:', tdLength)
 
-
-                            corpInfoFirst = driver.find_element_by_xpath('//*[@id="list' + str(list_length + 1) + '"]/td[1]/input').get_attribute('value')
-                            print('corpInfoFirst:', corpInfoFirst)
-
-                            #K172121809070016|VALIDATION|(주)아산섬유|자동차 내장재 원단 생산직원 모집
+                        if tdLength ==5:
                             try:
-                                recruitUniqueNumber = corpInfoFirst.split("|")[0]
+                                for corpTpelength in range(3):
+                                    try:
+                                        print(driver.find_element_by_xpath('//*[@id="list' + str(list_length + 1) + '"]/td[2]/div[1]/img[' + str(corpTpelength + 1) + ']').get_attribute('alt'))
+                                        corpType = driver.find_element_by_xpath('//*[@id="list' + str(list_length + 1) + '"]/td[2]/div[1]/img[' + str(corpTpelength + 1) + ']').get_attribute('alt')
+
+                                    except Exception as e:
+                                        print('기업종별 구분값(벤처/가족/강소/대기업 등)이 존재하지 않음')
+
+                                #corpFareFirst = driver.find_element_by_xpath('//*[@id="list' + str(list_length + 1) + '"]/td[4]/div[1]').text.replace(" ", "")
+                                corpFareFirst = result_autoScroller.select('tr#list' + str(list_length + 1) + ' > td:nth-of-type(4) > div:nth-of-type(1)')[0].text.replace(" ", "").replace("\t", "").replace("\n", "")
+                                print('corpFareFirst:', corpFareFirst)
+
+                                #corpRegisterFirst = driver.find_element_by_xpath('//*[@id="list' + str(list_length + 1) + '"]/td[5]/div[1]').text
+                                corpRegisterFirst = result_autoScroller.select('tr#list' + str(list_length + 1) + ' > td:nth-of-type(5) > div:nth-of-type(1)')[0].text.replace(" ", "").replace("\t", "").replace("\n", "")
+                                print('corpRegisterFirst:', corpRegisterFirst)
+
                             except Exception as e:
-                                print('공고 리스트 전면부에 체크박스가 없음. 리스트 상에서 구인공고인증번호를 취득할 수 없음.', e)
+                                print(e)
 
-                            corpNameFirst = driver.find_element_by_xpath('//*[@id="list' + str(list_length + 1) + '"]/td[2]/a').text
-                            print('corpNameFirst:', corpNameFirst)
+                        else:
+                            print('INPUT 테그 없음.')
+                            try:
+                                for corpTpelength in range(3):
+                                    try:
+                                        print(driver.find_element_by_xpath('//*[@id="list' + str(list_length + 1) + '"]/td[2]/div[1]/img[' + str(corpTpelength + 1) + ']').get_attribute('alt'))
+                                        corpType = driver.find_element_by_xpath('//*[@id="list' + str(list_length + 1) + '"]/td[2]/div[1]/img[' + str(corpTpelength + 1) + ']').get_attribute('alt')
 
-                            for corpTpelength in range(3):
-                                try:
-                                    print(driver.find_element_by_xpath('//*[@id="list' + str(list_length + 1) + '"]/td[2]/div[1]/img[' + str(corpTpelength + 1) + ']').get_attribute('alt'))
-                                    corpType = driver.find_element_by_xpath('//*[@id="list' + str(list_length + 1) + '"]/td[2]/div[1]/img[' + str(corpTpelength + 1) + ']').get_attribute('alt')
+                                    except Exception as e:
+                                        print('기업종별 구분값(벤처/가족/강소/대기업 등)이 존재하지 않음', e)
 
-                                    #result_workNetDictionaty['기업종별_' + recruitUniqueNumber] = corpType
+                                #corpFareFirst = driver.find_element_by_xpath('//*[@id="list' + str(list_length + 1) + '"]/td[4]/div[1]').text.replace(" ", "")
+                                corpFareFirst = result_autoScroller.select('tr#list' + str(list_length + 1) + ' > td:nth-of-type(4) > div:nth-of-type(1)')[0].text.replace(" ", "").replace("\t", "").replace("\n", "")
+                                print('corpFareFirst:', corpFareFirst)
 
-                                except Exception as e:
-                                    print('기업종별 구분값(벤처/가족/강소/대기업 등)이 존재하지 않음')
+                                #corpRegisterFirst = driver.find_element_by_xpath('//*[@id="list' + str(list_length + 1) + '"]/td[5]/div[1]').text
+                                corpRegisterFirst = result_autoScroller.select('tr#list' + str(list_length + 1) + ' > td:nth-of-type(5) > div:nth-of-type(1)')[0].text.replace(" ", "").replace("\t", "").replace("\n", "")
+                                print('corpRegisterFirst:', corpRegisterFirst)
 
-                                                                        #//*[@id="list3"]/td[5]/div[1]
-                            corpFareFirst = driver.find_element_by_xpath('//*[@id="list' + str(list_length + 1) + '"]/td[4]/div').text.replace(" ", "")
-                            print('corpFareFirst:', corpFareFirst)
-
-                            #result_workNetDictionaty['기업제시연봉_' + recruitUniqueNumber] = corpFareFirst
-
-                            corpRegisterFirst = driver.find_element_by_xpath('//*[@id="list' + str(list_length + 1) + '"]/td[5]/div').text
-                            print('corpRegisterFirst:', corpRegisterFirst)
-
-                            #result_workNetDictionaty['기업채용공고등록일_' + recruitUniqueNumber] = corpRegisterFirst
-
-
-                        except Exception as e:
-                            print('벤처/강소/가족 등의 표시 없음', e)
-                            #corpType = '벤처/강소/가족 등의 표시 없음'
-                            #result_workNetDictionaty['기업종별_' + recruitUniqueNumber] = corpType
+                            except Exception as e:
+                                print(e)
 
                         corpJobText = result_autoScroller.select("#list" + str(list_length + 1) + " > td:nth-of-type(3) > dl > dt > a")[0].text
 
@@ -1297,20 +1334,12 @@ class worknetCrawlerBot():
                         corpJobText_URL = result_autoScroller.find("a", string=corpJobText)
                         # logger.debug('제목_URL : {}'.format(corpJobText_URL['href']) )
 
-                        # 하단의 공고 세부항목으로 진입 후 출력되는 공고 제목과 비교하기 위함.
-                        # corpJboArticleTitle = corpJobText.replace(
-                        #     " ", "").replace(
-                        #     "    ", "").replace(
-                        #     "        ", "").replace(
-                        #     "\n", "").replace(
-                        #     "\xa0", "")
-
                         # 각 구인 공고별 URL 취득
                         corpJobText_detail_URL = corpJobText_URL['href']
 
                         # Maria-Field : 구인인증번호(구인공고고유값) : articleUniqueNum
-                        articleOverViewInfo = result_autoScroller.find(id='chkboxWantedAuthNo' + str(list_length))['value']
-                        self.logger.debug('구인인증번호|회사명|공고내용: {}'.format(articleOverViewInfo))
+                        # articleOverViewInfo = result_autoScroller.find(id='chkboxWantedAuthNo' + str(list_length))['value']
+                        # self.logger.debug('구인인증번호|회사명|공고내용: {}'.format(articleOverViewInfo))
 
                         articleUniqueNum = articleOverViewInfo.split('|')[0]
 
@@ -1340,7 +1369,7 @@ class worknetCrawlerBot():
 
                             # DATA : 구인인증번호: articleUniqueNum / 회사명: corpNm / 공고내용: corpWantJob
                             result_workNetDictionaty['구인인증번호_' + articleUniqueNum] = articleUniqueNum
-                            result_workNetDictionaty['회사명_' + articleUniqueNum] = corpNm
+                            result_workNetDictionaty['회사이름_' + articleUniqueNum] = corpNm
 
                             # 구인 인증번호를 DB 검색하여 존재하는 인증번호이면 정보 취득 skip : 구인인증번호 SELECT 하여 이 값을 list로 만들고, 이를 가지고 기존 구인인증번호인지를 검색할 예정.
                             # No.1 세부 공고 내부로 진입
@@ -1362,7 +1391,7 @@ class worknetCrawlerBot():
                                     "    ", " ").replace(
                                     "        ", " ").replace(
                                     "\n", "").replace(
-                                    "\xa0", "").split("이메일입사지원")[0]
+                                    "\xa0", "").split("이메일 입사지원")[0]
 
                                 result_workNetDictionaty['공고제목_' + articleUniqueNum] = corpRecruitArticleTitle
 
@@ -1411,7 +1440,7 @@ class worknetCrawlerBot():
 
                     except Exception as e_url:
                         print('마감된 채용정보 알림창이 떴습니다 :', e_url)
-                        result_workNetDictionaty['회사명_' + articleUniqueNum] = ''
+                        result_workNetDictionaty['회사이름_' + articleUniqueNum] = ''
                         result_workNetDictionaty['공고제목_' + articleUniqueNum] = ''
                         # result_workNetDictionaty['공고제목상세_' + articleUniqueNum] = ''
                         result_workNetDictionaty['조회수_' + articleUniqueNum] = ''
