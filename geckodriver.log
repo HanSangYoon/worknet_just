@@ -42,3 +42,11 @@ USAGE:
     geckodriver.exe [FLAGS] [OPTIONS]
 
 For more information try --help
+1538378540967	geckodriver	INFO	Listening on 127.0.0.1:59147
+1538378541944	mozprofile::profile	INFO	Using profile path /tmp/rust_mozprofile.7ojUtqfBVoqg
+1538378541944	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox
+1538378541947	geckodriver::marionette	INFO	Connecting to Marionette on localhost:43039
+1538378546852	Marionette	INFO	Listening on port 2828
+JavaScript error: jar:file:///usr/lib/firefox/omni.ja!/components/nsUrlClassifierListManager.js, line 321: NS_ERROR_NOT_INITIALIZED: Component returned failure code: 0xc1f30001 (NS_ERROR_NOT_INITIALIZED) [nsIUrlClassifierDBService.getTables]
+JavaScript error: jar:file:///usr/lib/firefox/omni.ja!/components/nsUrlClassifierListManager.js, line 321: NS_ERROR_NOT_INITIALIZED: Component returned failure code: 0xc1f30001 (NS_ERROR_NOT_INITIALIZED) [nsIUrlClassifierDBService.getTables]
+1538379400650	Marionette	INFO	Stopped listening on port 2828

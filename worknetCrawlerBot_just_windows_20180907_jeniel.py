@@ -16,22 +16,6 @@ os.environ['MOS_HEADLESS'] = "1"
 
 class worknetCrawlerBot():
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     def __init__(self):
         print('start')
         #
@@ -276,7 +260,6 @@ class worknetCrawlerBot():
 
                         if detailTextExpLen != 0:
                             for jenRealbad in range(detailTextExpLen):
-                                print('!@#!@#1111')
 
                                 try:
 
@@ -301,7 +284,6 @@ class worknetCrawlerBot():
 
                                     corpinfolist01contents2.append(detailPartContent2)
 
-                                    print('!@#!@#2222')
                                     result_workNetDictionaty['기업평가글_' + articleUniqueNum] = str(
                                         corpinfolist01contents2).replace(",", "+").replace("['", "").replace("']", "")
 
@@ -322,7 +304,7 @@ class worknetCrawlerBot():
             print('corpinfolist01:', corpinfolist01)
             for listleng in range(len(corpinfolist01)):
                 print('corpinfolist01', corpinfolist01[listleng] + '_' + articleUniqueNum)
-                print('@@@', corpinfolist01[listleng] + '_' + articleUniqueNum, '=', corpinfolist01contents[listleng])
+                #print('@@@', corpinfolist01[listleng] + '_' + articleUniqueNum, '=', corpinfolist01contents[listleng])
 
                 result_workNetDictionaty[corpinfolist01[listleng] + '_' + articleUniqueNum] = corpinfolist01contents[listleng]
 
